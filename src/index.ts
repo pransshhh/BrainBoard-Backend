@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import { env } from "./config";
-import { connectToMongoDB, client } from "./config/mongo"; // Import client
+import { connectToMongoDB, client } from "./config/mongo";
 
 const app = express();
 app.use(express.json());
@@ -23,8 +23,16 @@ app.get("/health", async (req: Request, res: Response) => {
 
 app.use(errorMiddleware);
 
-connectToMongoDB().then(() => {
-  app.listen(env.PORT, () => {
-    console.log(`Listening to port ${env.PORT} in ${env.NODE_ENV} mode `);
-  });
-});
+async function startServer() {
+  try {
+    await connectToMongoDB();
+    app.listen(env.PORT, () => {
+      console.log(`Listening to port ${env.PORT} in ${env.NODE_ENV} mode `);
+    });
+  } catch (error) {
+    console.error("Failed to connect to MongoDB, server not started:", error);
+    process.exit(1); // Exit the process if DB connection fails
+  }
+}
+
+startServer();
