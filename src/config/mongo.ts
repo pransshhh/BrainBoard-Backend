@@ -1,23 +1,25 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import { env } from "./env";
 
-const uri = env.MONGODB_URI;
+let client: MongoClient;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+function initializeClient(mongoUri: string): MongoClient {
+  return new MongoClient(mongoUri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    },
+  });
+}
 
-async function connectToMongoDB() {
+// Initialize the global client with the environment URI
+client = initializeClient(env.MONGODB_URI);
+
+async function connectToMongoDB(mongoClient: MongoClient = client) {
   try {
-    // Connect the client to the server (optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    await mongoClient.connect();
+    await mongoClient.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
@@ -27,9 +29,11 @@ async function connectToMongoDB() {
   }
 }
 
-async function disconnectFromMongoDB() {
-  await client.close();
-  console.log("Disconnected from MongoDB.");
+async function disconnectFromMongoDB(mongoClient: MongoClient = client) {
+  if (mongoClient) {
+    await mongoClient.close();
+    console.log("Disconnected from MongoDB.");
+  }
 }
 
-export { client, connectToMongoDB, disconnectFromMongoDB };
+export { client, connectToMongoDB, disconnectFromMongoDB, initializeClient };
