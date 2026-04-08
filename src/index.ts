@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import { env } from "./config";
+import { connectToMongoDB } from "./config/mongo";
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,8 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use(errorMiddleware);
 
-app.listen(env.PORT, () => {
-  console.log(`Listening to port ${env.PORT} in ${env.NODE_ENV} mode `);
+connectToMongoDB().then(() => {
+  app.listen(env.PORT, () => {
+    console.log(`Listening to port ${env.PORT} in ${env.NODE_ENV} mode `);
+  });
 });
