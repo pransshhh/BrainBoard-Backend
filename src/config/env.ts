@@ -9,6 +9,9 @@ const envSchema = z.object({
   MONGO_URI: z.string().url({
     message: "Invalid MONGO_URI. Must be a valid connection string."
   }),
+  MONGODB_URI: z.string().url({
+    message: "Invalid MONGODB_URI. Must be a valid connection string."
+  }),
 });
 
 const { success, data, error } = envSchema.safeParse(process.env);
