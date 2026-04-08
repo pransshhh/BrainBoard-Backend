@@ -23,10 +23,13 @@ async function connectToMongoDB() {
     );
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    // Ensures that the client will close when you finish/error
-    await client.close();
-    process.exit(1);
+    throw error; // Throw error instead of exiting process
   }
 }
 
-export { client, connectToMongoDB };
+async function disconnectFromMongoDB() {
+  await client.close();
+  console.log("Disconnected from MongoDB.");
+}
+
+export { client, connectToMongoDB, disconnectFromMongoDB };
