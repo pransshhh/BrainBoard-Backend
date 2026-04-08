@@ -29,6 +29,30 @@ async function connectToMongoDB(mongoClient: MongoClient = client) {
   }
 }
 
+async function connectWithRetry(
+  mongoClient: MongoClient = client,
+  retries: number = 5,
+  delay: number = 1000 // initial delay in ms
+) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await connectToMongoDB(mongoClient);
+      return; // Connection successful, exit
+    } catch (error) {
+      console.error(
+        `MongoDB connection failed. Retrying in ${delay / 1000} seconds...`,
+        error
+      );
+      await new Promise((res) => setTimeout(res, delay));
+      delay *= 2; // Exponential backoff
+    }
+  }
+  console.error(
+    `Failed to connect to MongoDB after ${retries} attempts.`
+  );
+  throw new Error("Failed to connect to MongoDB");
+}
+
 async function disconnectFromMongoDB(mongoClient: MongoClient = client) {
   if (mongoClient) {
     await mongoClient.close();
@@ -36,4 +60,4 @@ async function disconnectFromMongoDB(mongoClient: MongoClient = client) {
   }
 }
 
-export { client, connectToMongoDB, disconnectFromMongoDB, initializeClient };
+export { client, connectToMongoDB, disconnectFromMongoDB, initializeClient, connectWithRetry };
