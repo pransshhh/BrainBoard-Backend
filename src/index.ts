@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import { env } from "./config";
-import { connectToMongoDB, client, disconnectFromMongoDB } from "./config/mongo";
+import { connectWithRetry, client, disconnectFromMongoDB } from "./config/mongo";
 
 const app = express();
 app.use(express.json());
@@ -27,7 +27,7 @@ let server; // Declare server variable here to be accessible for shutdown
 
 async function startServer() {
   try {
-    await connectToMongoDB();
+    await connectWithRetry(); // Changed from connectToMongoDB()
     server = app.listen(env.PORT, () => {
       console.log(`Listening to port ${env.PORT} in ${env.NODE_ENV} mode `);
     });
