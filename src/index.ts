@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose"; // Import mongoose to check connection status
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import { env, connectDB } from "./config";
 import { UserRepository } from "./repositories/userRepository";
@@ -11,6 +12,16 @@ const userRepository = new UserRepository();
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Hello world" });
+});
+
+// Health check endpoint
+app.get("/health", (req: Request, res: Response) => {
+  const dbStatus = mongoose.connection.readyState;
+  if (dbStatus === 1) {
+    res.status(200).json({ status: "ok", database: "connected" });
+  } else {
+    res.status(503).json({ status: "error", database: "disconnected", readyState: dbStatus });
+  }
 });
 
 // New route to create a user
