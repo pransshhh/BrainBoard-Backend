@@ -15,6 +15,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.1",
     "cross-env": "^7.0.3",
+    "mongodb-memory-server": "^9.4.0",
     "nodemon": "^3.1.9",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
