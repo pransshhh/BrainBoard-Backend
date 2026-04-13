@@ -6,6 +6,7 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production"]),
   PORT: z.string().regex(/^\d+$/).transform(Number).default("3000"),
+  MONGO_URI: z.string().url(), // Added MONGO_URI validation
 });
 
 const { success, data, error } = envSchema.safeParse(process.env);
