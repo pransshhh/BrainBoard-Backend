@@ -23,3 +23,13 @@ jobs:
 
     - name: Run lint
       run: npm run lint
+
+    - name: Send failure notification
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_CHANNEL: '#ci-failures' # Replace with your desired Slack channel
+        SLACK_MESSAGE: 'CI pipeline failed for ${{ github.repository }} on branch ${{ github.ref_name }}! (<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>)'
+        SLACK_TITLE: 'CI Failure Alert'
+        SLACK_COLOR: 'danger'
