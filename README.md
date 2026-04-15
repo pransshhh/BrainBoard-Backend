@@ -15,6 +15,11 @@ npm run dev
 
 The server will be accessible at the address configured in your environment variables (e.g., `http://localhost:3000`).
 
-### Running Tests
+### Continuous Integration (CI)
 
-Currently, there is no dedicated test suite configured for this project.
+The CI pipeline is configured to run on every pull request and performs the following automated checks:
+
+*   **Build Check**: Ensures the TypeScript code compiles successfully without errors.
+*   **Linting**: Verifies code quality and style according to ESLint rules.
+
+Currently, there is no dedicated unit, integration, or end-to-end test suite configured for this project.
