@@ -31,7 +31,7 @@ describe('src/index.ts', () => {
     jest.clearAllMocks();
     // Re-get the mock app instance that express() returned when index.ts was required
     expressModule = require('express');
-    mockApp = (expressModule as jest.Mock)();
+    mockApp = (expressModule as unknown as jest.Mock)();
   });
 
   it('should define a GET route for "/"', () => {
