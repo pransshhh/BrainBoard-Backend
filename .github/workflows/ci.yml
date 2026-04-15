@@ -58,7 +58,8 @@ jobs:
             cd ${{ secrets.EC2_DEPLOY_PATH }}
 
             # Pull latest changes from main branch
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
 
             # Sync new env vars from .env.sample into .env (append missing keys only, never overwrite)
             if [ -f .env.sample ]; then
