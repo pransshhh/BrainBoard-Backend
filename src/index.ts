@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Hello world" });
+  res.json({ message: "Hello Everyone" });
 });
 
 app.use(errorMiddleware);
